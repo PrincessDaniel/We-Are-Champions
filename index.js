@@ -73,9 +73,9 @@ function render(list) {
         listItems += `
             <li class="list-item" data-id="${listID}">
                 <div>
-                    <strong>From ${sender}</strong><br>
+                    <strong>To ${receiver}</strong><br>
                     <p>${message}</p><br>
-                    <strong>To ${receiver}</strong>
+                    <strong>From ${sender}</strong>
                 </div>
                 <div class="likes-ctn">
                     <i class= "${heartIconClass} fa-heart" data-id="${listID}"></i>
