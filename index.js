@@ -1,9 +1,10 @@
-// javascript
+// javascript 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js"
 import { getDatabase,
     ref,
     push,
     onValue,
+    get,
     update,
     remove } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js"
 
@@ -13,6 +14,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const database = getDatabase(app)
 const referenceInDB = ref(database, "endorsements")
+
+const inputField = document.getElementById("endorsement-input")
+const publishBtn = document.getElementById("publish-btn")
+const ulEl = document.getElementById("ul-el")
+const senderField = document.getElementById("sender")
+const receiverField = document.getElementById("receiver")
+
 
 onValue(referenceInDB, function(snapshot) {
     const doesSnapshotExist = snapshot.exists()
@@ -28,12 +36,6 @@ onValue(referenceInDB, function(snapshot) {
 })
 
 
-const inputField = document.getElementById("endorsement-input")
-const publishBtn = document.getElementById("publish-btn")
-const ulEl = document.getElementById("ul-el")
-const senderField = document.getElementById("sender")
-const receiverField = document.getElementById("receiver")
-
 publishBtn.addEventListener("click", function() {
     const sender = senderField.value.trim()
     const receiver = receiverField.value.trim()
@@ -45,67 +47,87 @@ publishBtn.addEventListener("click", function() {
         inputField.value = ""
         senderField.value = ""
         receiverField.value = ""
+        return
     }
-    
+    alert("Please fill out all fields.")
+
 })
 
 
 
 function render(list) {
+    console.log("Rendering list:", list)
+
     let listItems = ""
     
     list.reverse() //to reverse the order of the list so the newest appear first and the oldest last
     
     for(let i = 0; i < list.length; i++) {
-        let listArray = list[i]
-        let listID = listArray[0]
-        let {sender, message, receiver, likes} = listArray[1]
-        let heartIcon = localStorage.getItem(`liked-${listID}`) ? "❤️" : "🖤"
+        const listArray = list[i]
+        const listID = listArray[0]
+        const {sender, message, receiver, likes} = listArray[1]
+        const heartIconClass = localStorage.getItem(`liked-${listID}`) ? "fa-solid" : "fa-regular"
+
+
         
         listItems += `
             <li class="list-item" data-id="${listID}">
-                <strong>From ${sender}</strong><br>
-                <p>${message}</p><br>
-                <strong>To ${receiver}</strong>
-                <button class="likes-btn" data-id="${listID}">${heartIcon}</button>
-                <span class="likes-count">${likes}</span>
+                <div>
+                    <strong>To ${receiver}</strong><br>
+                    <p>${message}</p><br>
+                    <strong>From ${sender}</strong>
+                </div>
+                <div class="likes-ctn">
+                    <i class= "${heartIconClass} fa-heart" data-id="${listID}"></i>
+                    <span class="likes-count">${likes}</span>
+                </div>
             </li>
-        `
+        `  
     }
     
     ulEl.innerHTML = listItems
     
-    document.querySelectorAll(".likes-btn").forEach(button => {
-        button.addEventListener("click", function() {
-            const buttonID = button.getAttribute("data-id")
-            const exactLocationOfButtonInDB = ref(database, `endorsements/${buttonID}`)
-            
-            if(localStorage.getItem(`liked-${buttonID}`)) {
+    document.querySelectorAll(".fa-heart").forEach(i => {
+        i.addEventListener("click", function() {
+            const heartButtonID = i.dataset.id
+            const exactLocationOfButtonInDB = ref(database, `endorsements/${heartButtonID}`)
+
+            const likeSpan = i.nextElementSibling
+
+           if(localStorage.getItem(`liked-${heartButtonID}`)) {
                 alert("You've already liked this message.")
                 return
-            }
-            button.textContent = "❤️" //need to make this work dynamic
-            onValue(exactLocationOfButtonInDB, function(snapshot) {
+            } else {
+                i.classList.remove("fa-regular")
+                i.classList.add("fa-solid")
+                localStorage.setItem(`liked-${heartButtonID}`, "true")
+            } /* this else is what updated the heart icon dynamically */
+            
+            get(exactLocationOfButtonInDB).then(snapshot => {
                 const data = snapshot.val()
                 if(data) {
                     const newLikes = (data.likes || 0) + 1
                     update(exactLocationOfButtonInDB, {likes: newLikes})
-                    
-                    const likeSpan = button.nextElementSibling
+
                     likeSpan.textContent = newLikes
+                    i.classList.remove("fa-regular")
+                    i.classList.add("fa-solid")
+                    localStorage.setItem(`liked-${heartButtonID}`, "true")
                 }
-            }, {onlyOnce: true}) // Prevent duplicate calls
-            
-            localStorage.setItem(`liked-${buttonID}`, "true")
+            }).catch(error => console.error("Error getting data:", error))
+            // {onlyOnce: true}) Prevent duplicate calls
         })
     })
-    
+
     document.querySelectorAll(".list-item").forEach(item => {
         item.addEventListener("dblclick", function() {
-            const itemID = item.getAttribute("data-id")
+            const itemID = item.dataset.id
             const exactLocationOfItemInDB = ref(database, `endorsements/${itemID}`)
+
         
-            remove(exactLocationOfItemInDB)
+            if (confirm("Are you sure you want to delete this endorsement?")) {
+                remove(exactLocationOfItemInDB)
+            }
         })
     })
 }

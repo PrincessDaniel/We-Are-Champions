@@ -11,19 +11,28 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="index.css">
+        <!-- Font Awesome CDN -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />        <link rel="stylesheet" href="index.css">
     </head>
     <body>
-        <img src="assets/freddie.png" alt="logo" width="90" height="90">
-        <h1 class="heading" id="heading">We are the Champions</h1>
-        <textarea type="text" id="endorsement-input" wrap="soft" placeholder="Write your endorsement here"></textarea>
-        <div id="sender-receiver">
-            <input type="text" class="from-to" id="sender" placeholder="From">
-            <input type="text" class="from-to" id="receiver" placeholder="To">
-        </div>
-        <button id="publish-btn">Publish</button>
-        <h2 class="heading" id="endorsement-header">-Endorsements-</h2>
-        <ul id="ul-el"></ul>
-        <script src="index.js" type="module"></script>
+        <header>
+            <img src="assets/freddie.png" alt="logo" width="90" height="90">
+            <h1 class="heading" id="heading">We are the Champions</h1>
+        </header>
+        <main>
+            <section>
+                <textarea type="text" id="endorsement-input" wrap="soft" placeholder="Write your endorsement here"></textarea>
+                <div id="sender-receiver">
+                    <input type="text" class="from-to" id="sender" placeholder="From">
+                    <input type="text" class="from-to" id="receiver" placeholder="To">
+                </div>
+            <button id="publish-btn">Publish</button>
+            </section>
+            <section id="endorsement-list"></section>
+                <h2 class="heading" id="endorsement-header">- Endorsements -</h2>
+                <ul id="ul-el"></ul>
+            </section>
+            <script src="index.js" type="module"></script>
+        </main>
     </body>
 </html>
