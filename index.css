@@ -55,7 +55,16 @@ li {
     font-size: 12px;
     line-height: 100%;
     letter-spacing: 0%;
+    display: flex;
+    flex-direction: column;
+    max-width: 317px;
+}
 
+.likes-ctn {
+    
+    gap: 200px;
+    margin-top: -15px;
+    margin-left: auto;
 }
 
 img {
@@ -130,24 +139,19 @@ textarea {
     color: #8F8F8F;
 }
 
-.likes-btn {
-    font-family: Inter;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 100%;
-    letter-spacing: 0%;
-    color: black;
-    background: none;
-    border: none;
+
+i{
+    font-size: 15px;
     cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-    text-align: end;
-    margin-left: 175px;
-    outline: none;
+    margin-right: 8px;
 }
 
-.likes-btn:hover {
-    transform: scale(1.2);
+.fa-regular{
+    color: #999;
+}
+
+.fa-solid{
+    color: red;
 }
 
 .likes-count {
